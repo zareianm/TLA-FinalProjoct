@@ -1,0 +1,14 @@
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.csproj.AssemblyReference.cache
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.GeneratedMSBuildEditorConfig.editorconfig
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.AssemblyInfoInputs.cache
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.AssemblyInfo.cs
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.csproj.CoreCompileInputs.cache
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.exe
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.deps.json
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.runtimeconfig.json
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.runtimeconfig.dev.json
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.dll
+F:\Term4\TLA\finalproject\finalproject\bin\Debug\netcoreapp3.1\finalproject.pdb
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.dll
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.pdb
+F:\Term4\TLA\finalproject\finalproject\obj\Debug\netcoreapp3.1\finalproject.genruntimeconfig.cache
