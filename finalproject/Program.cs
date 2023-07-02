@@ -87,8 +87,55 @@ namespace finalproject
 
                 Console.WriteLine(s);
             }
+
+            Console.WriteLine("-----------------------------------------------------");
+
+            SecondStepToConvertToCNF(trans, variebles,terminals);
+
+            foreach (KeyValuePair<string, List<string>> item in trans)
+            {
+                string s = item.Key + " -> ";
+
+                for (int i = 0; i < item.Value.Count - 1; i++)
+                {
+                    s += item.Value[i] + " | ";
+                }
+
+                s += item.Value[item.Value.Count - 1];
+
+                Console.WriteLine(s);
+            }
         }
 
+        private static void SecondStepToConvertToCNF(Dictionary<string, List<string>> trans, List<string> variebles, List<string> terminals)
+        {
+            int n = trans.Count;
+
+            for (int i = 0; i < trans.Count; i++)
+            {
+                KeyValuePair<string, List<string>> tr = trans.ElementAt(i);
+
+                List<string> lt = tr.Value;
+
+                for (int j = 0; j < lt.Count; j++)
+                {
+                    if(lt[j].Length > 2)
+                    {
+                        if (n + 64 == 'S')
+                            n++;
+                        char newVar = (char)(n + 64);
+                        
+                        variebles.Add(newVar.ToString());
+                        n++;
+
+                        trans.Add(newVar.ToString(), new List<string> { lt[j].Substring(0,2)});
+
+                        lt[j] = newVar.ToString()+lt[j].Substring(2);
+                        j--;
+                    }
+                }
+            }
+        }
         private static void FirstStepToConvertToCNF(Dictionary<string, List<string>> trans, List<string> variebles, List<string> terminals, int n)
         {
             Dictionary<string, string> temp = new Dictionary<string, string>();
