@@ -16,12 +16,12 @@ namespace finalproject
 
             for (int i = 0; i < n; i++)
             {
-                string[] completeTrans = Console.ReadLine().Split(new char[] { '-', '>', ' ', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] completeTrans = Console.ReadLine().Split(new char[] {' ', '|' }, StringSplitOptions.RemoveEmptyEntries);
                 variebles.Add(completeTrans[0]);
 
                 trans.Add(completeTrans[0].ToString(), new List<string>());
 
-                for (int j = 1; j < completeTrans.Length; j++)
+                for (int j = 2; j < completeTrans.Length; j++)
                 {
                     string s = "";
 
@@ -34,7 +34,12 @@ namespace finalproject
                     for (int k = 0; k < completeTrans[j].Length; k++)
                     {
                         if (completeTrans[j][k] != '>' && completeTrans[j][k] != '<' && completeTrans[j][k].ToString() != "")
+                        {
                             s += completeTrans[j][k];
+
+                            if (k>0 && completeTrans[j][k - 1] != '<' && !terminals.Contains(completeTrans[j][k].ToString()))
+                                terminals.Add(completeTrans[j][k].ToString());
+                        }
                     }
                     trans[completeTrans[0]].Add(s);
                 }
@@ -53,7 +58,7 @@ namespace finalproject
 
             foreach (KeyValuePair<string, List<string>> item in trans)
             {
-                string s = item.Key + " ->";
+                string s = item.Key + " -> ";
 
                 for (int i = 0; i < item.Value.Count - 1; i++)
                 {
@@ -64,6 +69,68 @@ namespace finalproject
 
                 Console.WriteLine(s);
             }
+
+            Console.WriteLine("-----------------------------------------------------");
+
+            FirstStepToConvertToCNF(trans, variebles,terminals, n);
+
+            foreach (KeyValuePair<string, List<string>> item in trans)
+            {
+                string s = item.Key + " -> ";
+
+                for (int i = 0; i < item.Value.Count - 1; i++)
+                {
+                    s += item.Value[i] + " | ";
+                }
+
+                s += item.Value[item.Value.Count - 1];
+
+                Console.WriteLine(s);
+            }
+        }
+
+        private static void FirstStepToConvertToCNF(Dictionary<string, List<string>> trans, List<string> variebles, List<string> terminals, int n)
+        {
+            Dictionary<string, string> temp = new Dictionary<string, string>();
+
+            for (int i = 0; i < terminals.Count; i++)
+            {
+                temp.Add(terminals[i], ((char)(n + 64 + i)).ToString());
+            }
+
+            for (int i = 0; i < trans.Count; i++)
+            {
+                KeyValuePair<string, List<string>> tr = trans.ElementAt(i);
+
+                List<string> lt = tr.Value;
+
+                for (int j = 0; j < lt.Count; j++)
+                {
+                    if (lt[j].Length == 1)
+                        continue;
+                    for (int k = 0; k < lt[j].Length; k++)
+                    {
+                        if (terminals.Contains(lt[j][k].ToString()))
+                        {
+                            lt[j] = lt[j].Substring(0, k) + temp[lt[j][k].ToString()] + lt[j].Substring(k + 1);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < temp.Count; i++)
+            {
+                KeyValuePair<string, string> t = temp.ElementAt(i);
+
+                trans.Add(t.Value, new List<string> { t.Key});
+
+                variebles.Add(t.Value);
+            }
+            //for (int i = 0; i < terminals.Count; i++)
+            //{
+            //    trans.Add(((char)(n + 64 + i)).ToString(), new List<string> { terminals[i] });
+            //    variebles.Add(((char)(n + 64 + i)).ToString());
+            //}
         }
 
         private static void RemoveUnit(Dictionary<string, List<string>> trans, ref List<Tuple<string, string>> unitProductDeleted, List<string> variebles)
