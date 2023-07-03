@@ -16,10 +16,10 @@ namespace finalproject
 
             for (int i = 0; i < n; i++)
             {
-                string[] completeTrans = Console.ReadLine().Split(new char[] {' ', '|' }, StringSplitOptions.RemoveEmptyEntries);
-                variebles.Add(completeTrans[0]);
+                string[] completeTrans = Console.ReadLine().Split(new char[] { ' ', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                variebles.Add(completeTrans[0][1].ToString());
 
-                trans.Add(completeTrans[0].ToString(), new List<string>());
+                trans.Add(completeTrans[0][1].ToString(), new List<string>());
 
                 for (int j = 2; j < completeTrans.Length; j++)
                 {
@@ -27,7 +27,7 @@ namespace finalproject
 
                     if (completeTrans[j] == "#")
                     {
-                        trans[completeTrans[0]].Add("");
+                        trans[completeTrans[0][1].ToString()].Add("");
                         continue;
                     }
 
@@ -37,11 +37,11 @@ namespace finalproject
                         {
                             s += completeTrans[j][k];
 
-                            if (k>0 && completeTrans[j][k - 1] != '<' && !terminals.Contains(completeTrans[j][k].ToString()))
+                            if (k > 0 && completeTrans[j][k - 1] != '<' && !terminals.Contains(completeTrans[j][k].ToString()))
                                 terminals.Add(completeTrans[j][k].ToString());
                         }
                     }
-                    trans[completeTrans[0]].Add(s);
+                    trans[completeTrans[0][1].ToString()].Add(s);
                 }
             }
 
@@ -72,7 +72,7 @@ namespace finalproject
 
             Console.WriteLine("-----------------------------------------------------");
 
-            FirstStepToConvertToCNF(trans, variebles,terminals, n);
+            FirstStepToConvertToCNF(trans, variebles, terminals, n);
 
             foreach (KeyValuePair<string, List<string>> item in trans)
             {
@@ -90,7 +90,7 @@ namespace finalproject
 
             Console.WriteLine("-----------------------------------------------------");
 
-            SecondStepToConvertToCNF(trans, variebles,terminals);
+            SecondStepToConvertToCNF(trans, variebles, terminals);
 
             foreach (KeyValuePair<string, List<string>> item in trans)
             {
@@ -105,6 +105,59 @@ namespace finalproject
 
                 Console.WriteLine(s);
             }
+
+            string input = Console.ReadLine();
+
+            Console.WriteLine(CYK(trans, variebles, input) ? "Accepted" : "Rejected");
+        }
+
+        private static bool CYK(Dictionary<string, List<string>> trans, List<string> variebles, string input)
+        {
+            int n = input.Length;
+
+            if (n == 0)
+                return false;
+
+            HashSet<string>[,] DP = new HashSet<string>[n, n];
+
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    DP[i, j] = new HashSet<string>();
+
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < variebles.Count; j++)
+                {
+                    if (trans[variebles[j]].Contains(input[i].ToString()))
+                        DP[i, i].Add(variebles[j]);
+                }
+            }
+
+            for (int l = 2; l <= n; l++)
+            {
+                for (int i = 0; i <= n-l ; i++)
+                {
+                    int j = i + l - 1;
+
+                    for (int k = i; k < j-1; k++)
+                    {
+                        for (int m = 0; m < trans.Count; m++)
+                        {
+                            KeyValuePair<string, List<string>> tr = trans.ElementAt(m);
+                            List<string> lt = tr.Value;
+
+                            for (int  o= 0; o < lt.Count; o++)
+                            {
+                                if (lt[o].Length == 2 && DP[i, k].Contains(lt[o][0].ToString()) && DP[k + 1, j].Contains(lt[o][1].ToString()))
+                                    DP[i, j].Add(tr.Key);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return DP[0, n - 1].Contains("S"); 
         }
 
         private static void SecondStepToConvertToCNF(Dictionary<string, List<string>> trans, List<string> variebles, List<string> terminals)
@@ -119,18 +172,18 @@ namespace finalproject
 
                 for (int j = 0; j < lt.Count; j++)
                 {
-                    if(lt[j].Length > 2)
+                    if (lt[j].Length > 2)
                     {
                         if (n + 64 == 'S')
                             n++;
                         char newVar = (char)(n + 64);
-                        
+
                         variebles.Add(newVar.ToString());
                         n++;
 
-                        trans.Add(newVar.ToString(), new List<string> { lt[j].Substring(0,2)});
+                        trans.Add(newVar.ToString(), new List<string> { lt[j].Substring(0, 2) });
 
-                        lt[j] = newVar.ToString()+lt[j].Substring(2);
+                        lt[j] = newVar.ToString() + lt[j].Substring(2);
                         j--;
                     }
                 }
@@ -169,7 +222,7 @@ namespace finalproject
             {
                 KeyValuePair<string, string> t = temp.ElementAt(i);
 
-                trans.Add(t.Value, new List<string> { t.Key});
+                trans.Add(t.Value, new List<string> { t.Key });
 
                 variebles.Add(t.Value);
             }
